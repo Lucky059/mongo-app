@@ -1,3 +1,4 @@
 # Ignore Kubernetes secrets
 mongosecret.yaml
 secret*.yaml
+mongosecret.yaml
