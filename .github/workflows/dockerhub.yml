@@ -1,26 +1,30 @@
-deploy:
-  runs-on: ubuntu-latest
+name: Deploy to Kubernetes
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+on:
+  push:
+    branches:
+      - main
 
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-    - name: Configure Kubeconfig
-      run: |
-        echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Apply Kubernetes manifests
-      run: |
-        kubectl apply -f mongodb-deployment.yaml
-        kubectl apply -f mongoexpress.yaml
-        kubectl apply -f configmap.yaml
-        kubectl apply -f mongosecret.yaml
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
 
+      - name: Configure Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
 
-      
-
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f mongodb-deployment.yaml
+          kubectl apply -f mongoexpress.yaml
+          kubectl apply -f configmap.yaml
+          kubectl apply -f mongosecret.yaml
